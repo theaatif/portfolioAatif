@@ -53,36 +53,52 @@ if (h5timer) {
 }
 }
 
-function scrollAnimation(){
-    gsap.registerPlugin(ScrollTrigger);
+function scrollAnimation() {
+  gsap.registerPlugin(ScrollTrigger);
 
-// Using Locomotive Scroll from Locomotive https://github.com/locomotivemtl/locomotive-scroll
+  // Initialize LocomotiveScroll on the "#main" container
+  const locoScroll = new LocomotiveScroll({
+    el: document.querySelector("#main"),
+    smooth: true
+  });
 
-const locoScroll = new LocomotiveScroll({
-  el: document.querySelector("#main"),
-  smooth: true
-});
-// each time Locomotive Scroll updates, tell ScrollTrigger to update too (sync positioning)
-locoScroll.on("scroll", ScrollTrigger.update);
+  // Each time Locomotive Scroll updates, tell ScrollTrigger to update too
+  locoScroll.on("scroll", ScrollTrigger.update);
 
-// tell ScrollTrigger to use these proxy methods for the ".smooth-scroll" element since Locomotive Scroll is hijacking things
-ScrollTrigger.scrollerProxy("#main", {
-  scrollTop(value) {
-    return arguments.length ? locoScroll.scrollTo(value, 0, 0) : locoScroll.scroll.instance.scroll.y;
-  }, // we don't have to define a scrollLeft because we're only scrolling vertically.
-  getBoundingClientRect() {
-    return {top: 0, left: 0, width: window.innerWidth, height: window.innerHeight};
-  },
-  // LocomotiveScroll handles things completely differently on mobile devices - it doesn't even transform the container at all! So to get the correct behavior and avoid jitters, we should pin things with position: fixed on mobile. We sense it by checking to see if there's a transform applied to the container (the LocomotiveScroll-controlled element).
-  pinType: document.querySelector("#main").style.transform ? "transform" : "fixed"
-});
+  // Tell ScrollTrigger to use these proxy methods for the "#main" element,
+  // since Locomotive Scroll is controlling the scrolling behavior.
+  ScrollTrigger.scrollerProxy("#main", {
+    scrollTop(value) {
+      // When a value is provided, scroll to that position
+      return arguments.length
+        ? locoScroll.scrollTo(value, 0, 0)
+        : locoScroll.scroll.instance.scroll.y;
+    },
+    getBoundingClientRect() {
+      return {
+        top: 0,
+        left: 0,
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+    },
+    // Use fixed pinning on mobile (if no transform is applied)
+    pinType: document.querySelector("#main").style.transform ? "transform" : "fixed"
+  });
 
-// each time the window updates, we should refresh ScrollTrigger and then update LocomotiveScroll. 
-ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
+  // When ScrollTrigger refreshes, update LocomotiveScroll
+  ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
 
-// after everything is set up, refresh() ScrollTrigger and update LocomotiveScroll because padding may have been added for pinning, etc.
-ScrollTrigger.refresh();
+  // On window resize, update LocomotiveScroll and refresh ScrollTrigger
+  window.addEventListener("resize", () => {
+    locoScroll.update();
+    ScrollTrigger.refresh();
+  });
+
+  // After setting everything up, refresh ScrollTrigger to ensure proper calculations
+  ScrollTrigger.refresh();
 }
+
 
 loaderCountdown()
 scrollAnimation()
@@ -548,13 +564,49 @@ function createParticles() {
 
 
 //   page 5
-// Initialize GSAP
-gsap.registerPlugin(ScrollTrigger);
-        
-// Initialize Parallax.js for 3D scene
-function initParallax() {
+// Wait until the DOM is fully loaded
+document.addEventListener("DOMContentLoaded", () => {
+  // --- GSAP and Locomotive Scroll Initialization ---
+  gsap.registerPlugin(ScrollTrigger);
+
+  // Initialize LocomotiveScroll on the container with ID "main"
+  const locoScroll = new LocomotiveScroll({
+    el: document.querySelector("#main"),
+    smooth: true
+  });
+
+  // Whenever Locomotive Scroll updates, inform ScrollTrigger
+  locoScroll.on("scroll", ScrollTrigger.update);
+
+  // Set up ScrollTrigger to use Locomotive Scroll’s proxy methods
+  ScrollTrigger.scrollerProxy("#main", {
+    scrollTop(value) {
+      return arguments.length
+        ? locoScroll.scrollTo(value, 0, 0)
+        : locoScroll.scroll.instance.scroll.y;
+    },
+    getBoundingClientRect() {
+      return {
+        top: 0,
+        left: 0,
+        width: window.innerWidth,
+        height: window.innerHeight
+      };
+    },
+    // Use "transform" pinning if Locomotive Scroll applies transforms
+    pinType: document.querySelector("#main").style.transform ? "transform" : "fixed"
+  });
+
+  // Refresh Locomotive Scroll when ScrollTrigger updates
+  ScrollTrigger.addEventListener("refresh", () => locoScroll.update());
+
+  // --- Animation and Effects Functions ---
+
+  // Initialize Parallax.js for a 3D scene
+  function initParallax() {
     const scene = document.getElementById('scene');
-    const parallaxInstance = new Parallax(scene, {
+    if (scene && typeof Parallax !== "undefined") {
+      new Parallax(scene, {
         relativeInput: true,
         hoverOnly: false,
         clipRelativeInput: true,
@@ -563,244 +615,228 @@ function initParallax() {
         limitX: 100,
         limitY: 50,
         scalarX: 10,
-        scalarY: 10,
-    });
-}
+        scalarY: 10
+      });
+    }
+  }
 
-// GSAP animation for the heading
-function animateHeading() {
+  // Animate the heading and links using GSAP
+  function animateHeading() {
     const headingLines = document.querySelectorAll('.heading-line');
-    
-    // Staggered animation for each line of text
     gsap.to(headingLines, {
-        y: 0,
-        opacity: 1,
-        duration: 1.2,
-        stagger: 0.2,
-        ease: "power3.out",
-        onComplete: () => {
-            // 3D float animation
-            gsap.to('.footer-heading', {
-                rotationY: 10,
-                rotationX: -10,
-                duration: 6,
-                yoyo: true,
-                repeat: -1,
-                ease: "sine.inOut",
-            });
-        }
+      y: 0,
+      opacity: 1,
+      duration: 1.2,
+      stagger: 0.2,
+      ease: "power3.out",
+      onComplete: () => {
+        gsap.to('.footer-heading', {
+          rotationY: 10,
+          rotationX: -10,
+          duration: 6,
+          yoyo: true,
+          repeat: -1,
+          ease: "sine.inOut"
+        });
+      }
     });
-    
-    // Reveal animation for links
+
     gsap.to('.link-item', {
-        opacity: 1,
-        y: 0,
-        stagger: 0.15,
-        duration: 0.8,
-        delay: 0.8,
-        ease: "power2.out",
-        onComplete: () => {
-            // Add depth effect to each link item
-            document.querySelectorAll('.link-item').forEach(item => {
-                const depth = parseFloat(item.getAttribute('data-depth') || 0.2);
-                gsap.to(item, {
-                    z: depth * 100,
-                    duration: 0.5,
-                });
-            });
-        }
+      opacity: 1,
+      y: 0,
+      stagger: 0.15,
+      duration: 0.8,
+      delay: 0.8,
+      ease: "power2.out",
+      onComplete: () => {
+        document.querySelectorAll('.link-item').forEach(item => {
+          const depth = parseFloat(item.getAttribute('data-depth') || 0.2);
+          gsap.to(item, {
+            z: depth * 100,
+            duration: 0.5
+          });
+        });
+      }
     });
-    
-    // Fade in copyright
+
     gsap.to('.copyright', {
-        opacity: 0.6,
-        duration: 1,
-        delay: 1.8
+      opacity: 0.6,
+      duration: 1,
+      delay: 1.8
     });
-}
+  }
 
-// Create 3D particles
-function createParticles() {
+  // Create 3D particles for each parallax layer
+  function createParticles() {
     const layers = document.querySelectorAll('.parallax-layer');
-    
     layers.forEach((layer, layerIndex) => {
-        const particleCount = 10 - layerIndex * 2; // More particles in back layers
-        
-        for (let i = 0; i < particleCount; i++) {
-            const particle = document.createElement('div');
-            particle.classList.add('particle');
-            
-            // Random styles
-            const size = Math.random() * 8 + 2;
-            const opacity = (Math.random() * 0.15 + 0.05) / (layerIndex + 1); // More opacity in front layers
-            
-            particle.style.width = `${size}px`;
-            particle.style.height = `${size}px`;
-            particle.style.backgroundColor = `rgba(255, 255, 255, ${opacity})`;
-            
-            // Random position
-            const left = Math.random() * 100;
-            const top = Math.random() * 100;
-            particle.style.left = `${left}%`;
-            particle.style.top = `${top}%`;
-            
-            layer.appendChild(particle);
-            
-            // Add GSAP floating animation
-            gsap.to(particle, {
-                y: '+=20',
-                x: '+=10',
-                duration: 2 + Math.random() * 4,
-                repeat: -1,
-                yoyo: true,
-                ease: "sine.inOut",
-                delay: Math.random() * 2
-            });
-        }
-    });
-}
+      const particleCount = 10 - layerIndex * 2; // Fewer particles on front layers
+      for (let i = 0; i < particleCount; i++) {
+        const particle = document.createElement('div');
+        particle.classList.add('particle');
 
-// Modified customParallax function that preserves link clickability
-function customParallax() {
+        // Randomize particle size and opacity
+        const size = Math.random() * 8 + 2;
+        const opacity = (Math.random() * 0.15 + 0.05) / (layerIndex + 1);
+        particle.style.width = `${size}px`;
+        particle.style.height = `${size}px`;
+        particle.style.backgroundColor = `rgba(255, 255, 255, ${opacity})`;
+
+        // Randomize particle position
+        particle.style.left = `${Math.random() * 100}%`;
+        particle.style.top = `${Math.random() * 100}%`;
+
+        layer.appendChild(particle);
+
+        // Animate the particle with a floating effect
+        gsap.to(particle, {
+          x: '+=10',
+          y: '+=20',
+          duration: 2 + Math.random() * 4,
+          repeat: -1,
+          yoyo: true,
+          ease: "sine.inOut",
+          delay: Math.random() * 2
+        });
+      }
+    });
+  }
+
+  // Custom parallax for the footer heading and links
+  function customParallax() {
     const container = document.querySelector('.parallax-wrapper');
     const heading = document.querySelector('.footer-heading');
     const links = document.querySelectorAll('.link-value a');
-    
-    // Make sure links are always clickable
+
+    // Ensure links are clickable
     links.forEach(link => {
-        link.style.pointerEvents = 'auto';
+      link.style.pointerEvents = 'auto';
     });
-    
+
     container.addEventListener('mousemove', (e) => {
-        const centerX = container.offsetWidth / 2;
-        const centerY = container.offsetHeight / 2;
-        const mouseX = e.clientX;
-        const mouseY = e.clientY;
-        
-        // Calculate distance from center as percentage
-        const moveX = (mouseX - centerX) / centerX;
-        const moveY = (mouseY - centerY) / centerY;
-        
-        // Animate heading with more pronounced effect
-        gsap.to(heading, {
-            rotationY: moveX * 15,
-            rotationX: -moveY * 15,
-            duration: 0.5,
-            ease: "power1.out"
-        });
-        
-        // Animate link items but not the <a> tags themselves
-        document.querySelectorAll('.link-item').forEach(item => {
-            const depth = parseFloat(item.getAttribute('data-depth') || 0.2);
-            // Find the link inside this item
-            const link = item.querySelector('a');
-            
-            // Apply transform to the item
-            gsap.to(item, {
-                x: moveX * 30 * depth,
-                y: moveY * 30 * depth,
-                rotationY: moveX * 5 * depth,
-                rotationX: -moveY * 5 * depth,
-                duration: 0.5,
-                ease: "power1.out"
-            });
-        });
-    });
-}
+      const centerX = container.offsetWidth / 2;
+      const centerY = container.offsetHeight / 2;
+      const moveX = (e.clientX - centerX) / centerX;
+      const moveY = (e.clientY - centerY) / centerY;
 
-// Modified magnetic effect that preserves link clickability
-function magneticEffect() {
+      // Animate the heading with a tilt effect
+      gsap.to(heading, {
+        rotationY: moveX * 15,
+        rotationX: -moveY * 15,
+        duration: 0.5,
+        ease: "power1.out"
+      });
+
+      // Animate each link item based on its data-depth
+      document.querySelectorAll('.link-item').forEach(item => {
+        const depth = parseFloat(item.getAttribute('data-depth') || 0.2);
+        gsap.to(item, {
+          x: moveX * 30 * depth,
+          y: moveY * 30 * depth,
+          rotationY: moveX * 5 * depth,
+          rotationX: -moveY * 5 * depth,
+          duration: 0.5,
+          ease: "power1.out"
+        });
+      });
+    });
+  }
+
+  // Magnetic effect for link containers
+  function magneticEffect() {
     const linkValues = document.querySelectorAll('.link-value');
-    
     linkValues.forEach(link => {
-        // Store the <a> tag reference
-        const anchor = link.querySelector('a');
-        
-        link.addEventListener('mousemove', function(e) {
-            const bounds = this.getBoundingClientRect();
-            const relX = e.clientX - bounds.left;
-            const relY = e.clientY - bounds.top;
-            const x = relX - bounds.width / 2;
-            const y = relY - bounds.height / 2;
-            
-            gsap.to(this, {
-                x: x * 0.5,
-                y: y * 0.5,
-                z: 30,
-                rotation: x * 0.02,
-                duration: 0.3,
-                ease: "power2.out"
-            });
-            
-            // Make sure anchor is clickable
-            if (anchor) {
-                anchor.style.pointerEvents = 'auto';
-            }
-        });
-        
-        link.addEventListener('mouseleave', function() {
-            gsap.to(this, {
-                x: 0,
-                y: 0,
-                z: 0,
-                rotation: 0,
-                duration: 0.5,
-                ease: "elastic.out(1, 0.3)"
-            });
-        });
-    });
-}
+      const anchor = link.querySelector('a');
+      link.addEventListener('mousemove', function(e) {
+        const bounds = this.getBoundingClientRect();
+        const x = e.clientX - bounds.left - bounds.width / 2;
+        const y = e.clientY - bounds.top - bounds.height / 2;
 
-// Modified 3D tilt effect on scroll
-function initScrollTilt() {
+        gsap.to(this, {
+          x: x * 0.5,
+          y: y * 0.5,
+          z: 30,
+          rotation: x * 0.02,
+          duration: 0.3,
+          ease: "power2.out"
+        });
+
+        if (anchor) {
+          anchor.style.pointerEvents = 'auto';
+        }
+      });
+
+      link.addEventListener('mouseleave', function() {
+        gsap.to(this, {
+          x: 0,
+          y: 0,
+          z: 0,
+          rotation: 0,
+          duration: 0.5,
+          ease: "elastic.out(1, 0.3)"
+        });
+      });
+    });
+  }
+
+  // 3D tilt effect on scroll for the footer container
+  function initScrollTilt() {
     ScrollTrigger.create({
-        trigger: '.footer-container',
-        start: 'top bottom',
-        end: 'bottom top',
-        scrub: true,
-        onUpdate: (self) => {
-            const progress = self.progress;
-            const tiltAmount = 15 * (progress - 0.5);
-            
-            gsap.set('.footer-container', {
-                rotationX: tiltAmount,
-                z: progress * 100
-            });
-            
-            // Ensure links remain clickable during scroll
-            document.querySelectorAll('.link-value a').forEach(link => {
-                link.style.pointerEvents = 'auto';
-            });
-        }
+      trigger: '.footer-container',
+      scroller: "#main", // Tell ScrollTrigger to use the Locomotive container
+      start: 'top bottom',
+      end: 'bottom top',
+      scrub: true,
+      onUpdate: (self) => {
+        const progress = self.progress;
+        const tiltAmount = 15 * (progress - 0.5);
+        gsap.set('.footer-container', {
+          rotationX: tiltAmount,
+          z: progress * 100
+        });
+        // Ensure links remain clickable during scroll animations
+        document.querySelectorAll('.link-value a').forEach(link => {
+          link.style.pointerEvents = 'auto';
+        });
+      }
     });
-}
+  }
 
-// Animation on page load
-document.addEventListener('DOMContentLoaded', () => {
-    // Ensure all links have proper pointer-events
-    document.querySelectorAll('a').forEach(link => {
-        link.style.pointerEvents = 'auto';
-    });
-    
-    // Set transform-style on all elements for the 3D effect
-    document.querySelectorAll('*').forEach(el => {
-        if (el.className.includes('layer') || el.className.includes('footer')) {
-            el.style.transformStyle = 'preserve-3d';
-        }
-        // Except links - they should be flat
-        if (el.tagName === 'A') {
-            el.style.transformStyle = 'flat';
-        }
-    });
-    
-    createParticles();
-    animateHeading();
-    customParallax();
-    magneticEffect();
-    initScrollTilt();
-    
-    // Only initialize parallax.js if available
-    if (typeof Parallax !== 'undefined') {
-        initParallax();
+  // --- Additional Setup ---
+
+  // Ensure all links are clickable
+  document.querySelectorAll('a').forEach(link => {
+    link.style.pointerEvents = 'auto';
+  });
+
+  // Set transform-style for elements to enable proper 3D rendering
+  document.querySelectorAll('*').forEach(el => {
+    if (el.className.includes('layer') || el.className.includes('footer')) {
+      el.style.transformStyle = 'preserve-3d';
     }
+    if (el.tagName === 'A') {
+      el.style.transformStyle = 'flat';
+    }
+  });
+
+  // --- Initialize All Effects and Animations ---
+  createParticles();
+  animateHeading();
+  customParallax();
+  magneticEffect();
+  initScrollTilt();
+  initParallax();
+
+  // --- Refresh ScrollTrigger and Locomotive Scroll ---
+  // Once everything (images, particles, etc.) has loaded, refresh for accurate measurements
+  window.addEventListener("load", () => {
+    ScrollTrigger.refresh();
+    locoScroll.update();
+  });
+
+  // Also refresh on window resize
+  window.addEventListener("resize", () => {
+    locoScroll.update();
+    ScrollTrigger.refresh();
+  });
 });
