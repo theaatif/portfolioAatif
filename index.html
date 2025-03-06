@@ -26,7 +26,7 @@
 
     <div id="main">
 
-        <div id="page1" data-scroll data-scroll-speed="-2.5">
+            <div id="page1" data-scroll data-scroll-speed="-2.5">
             <nav class="navbar">
                 <div class="nav-container">
                     <a href="#" class="logo">Md Aatif Alam</a>
@@ -35,7 +35,7 @@
                         <li><a href="#page2">About</a></li>
                         <li><a href="#page3">Skills</a></li>
                         <li><a href="#page4">Projects</a></li>
-                        <li><a href="#">Contact</a></li>
+                        <li><a href="#page5">Contact</a></li>
                     </ul>
                     <div class="hamburger">
                         <div class="hamburger__bar"></div>
@@ -62,10 +62,10 @@
                 <h1>to real-world projects.</h1> 
             </div> 
             
-        </div> <!-- page 1 end here -->
+            </div> <!-- page 1 end here -->
           
         
-        <div id="page2" data-scroll data-scroll-speed="-0.5">
+            <div id="page2" data-scroll data-scroll-speed="-0.5">
               
         <div class="parallax-layer bg-dots" id="bg-dots"></div>
         
@@ -77,14 +77,14 @@
             <div class="profile-container">
                 <div class="profile-image-container floating" id="profile-image-container">
                     <div class="profile-image">
-                        <img src="images/aatif.jpg" alt="Md Aatif Alam">
+                        <img src="images/aatif.jpg" alt="MD Aatif Alam">
                     </div>
                     <div class="profile-frame"></div>
                     <div class="profile-frame-2"></div>
                 </div>
                 
                 <div class="profile-text" id="profile-text">
-                    <div class="name">Md AATIF ALAM</div>
+                    <div class="name">MD AATIF ALAM</div>
                     <div class="description">
                         I'm a Computer Science Engineering student at Sri Siddhartha School of Engineering, Tumkur, with an 8+ CGPA.
                     </div>
@@ -103,9 +103,9 @@
                 <div class="scroll-arrow"></div>
             </div> -->
         </div>
-    </div>
+            </div>
 
-    <div id="page3" data-scroll data-scroll-speed="-0.7">
+            <div id="page3" data-scroll data-scroll-speed="-0.7">
 
         <section class="skills-section" id="skills-section">
             <div class="section-title-container">
@@ -265,13 +265,76 @@
             <div class="glow-effect" id="glow-effect"></div>
           </section>
 
-    </div>
+            </div>
 
-    <div id="page4" data-scroll data-scroll-speed="-0.2">
+            <div id="page4" data-scroll data-scroll-speed="-0.2">
     <div><h2>Projects</h2></div>
-        <div class="projects-grid">
-            <!-- Projects will be loaded by JavaScript -->
-          </div>
+       
+    <div class="projects-grid">
+        <!-- Projects will be loaded by JavaScript -->
+      </div>
+            </div>
+          
+            <div id="page5" data-scroll data-scroll-speed="0" >
+
+            <div class="parallax-wrapper">
+                <div class="footer-container" id="scene">
+                    <!-- Parallax background layers -->
+                    <div class="parallax-layer layer-1">
+                        <div class="parallax-shape shape-1"></div>
+                        <!-- Particles will be added here by JS -->
+                    </div>
+        
+                    <div class="parallax-layer layer-2">
+                        <div class="parallax-shape shape-2"></div>
+                        <!-- Particles will be added here by JS -->
+                    </div>
+        
+                    <div class="parallax-layer layer-3">
+                        <div class="parallax-shape shape-3"></div>
+                        <!-- Particles will be added here by JS -->
+                    </div>
+                    
+                    <div class="parallax-layer layer-4">
+                        <div class="footer-content">
+                            <h2 class="footer-heading text-3d">
+                                <span class="heading-line">LET'S</span>
+                                <span class="heading-line">GET IN</span>
+                                <span class="heading-line">TOUCH</span>
+                            </h2>
+                            
+                            <div class="footer-links">
+                                <div class="link-item" data-depth="0.2">
+                                    <div class="link-title">Email</div>
+                                    <div class="link-value"><a href="mailto:your@email.com">aatifmdalam@gmail.com</a></div>
+                                </div>
+                                
+                                <div class="link-item" data-depth="0.4">
+                                    <div class="link-title">LinkedIn</div>
+                                    <div class="link-value"><a href="https://www.linkedin.com/in/md-aatif-alam-b62268227/" target="_blank">Md Aatif Alam</a></div>
+                                </div>
+                                
+                                <div class="link-item" data-depth="0.6">
+                                    <div class="link-title">GitHub</div>
+                                    <div class="link-value"><a href="https://github.com/theaatif" target="_blank">@theaatif</a></div>
+                                </div>
+                                
+                                <div class="link-item" data-depth="0.8">
+                                    <div class="link-title">Resume</div>
+                                    <div class="link-value"><a href="path/to/your/resume.pdf" target="_blank">View Resume</a></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="parallax-layer layer-5">
+                        <div class="copyright">© 2025 Build by @aatif. All Rights Reserved.</div>
+                    </div>
+                </div>
+            </div>
+
+
+            </div>
    
 
     </div>  <!-- main end here -->
@@ -280,7 +343,12 @@
 </body>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js" integrity="sha512-7eHRwcbYkK4d9g/6tD/mhkf++eoTHwpNM9woBxtPUBWm67zeAfFC+HrdoE2GanKeocly/VxeLvIqwvCdk7qScg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 <script src="https://cdn.jsdelivr.net/npm/locomotive-scroll@3.5.4/dist/locomotive-scroll.js"></script>
+<!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script> -->
+ <!-- GSAP for smooth animations -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
-<script  type="text/javascript"  src="https://unpkg.com/sheryjs/dist/Shery.js"></script>
+<!-- ImagesLoaded for proper image handling -->
+<script src="https://unpkg.com/imagesloaded@5/imagesloaded.pkgd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/parallax/3.1.0/parallax.min.js"></script>
 <script src="script.js"></script>
 </html>

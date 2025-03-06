@@ -88,11 +88,6 @@ loaderCountdown()
 scrollAnimation()
 loadingAnimation() 
 
-
-
-
-
-
 //hambuerger
 const hamburger = document.querySelector('.hamburger');
 const navLinks = document.querySelector('.nav-links');
@@ -215,8 +210,8 @@ document.querySelectorAll('.nav-links a').forEach(link => {
      const mouseY = e.clientY / window.innerHeight;
      
      // Calculate rotation values
-     const rotateY = (mouseX - 0.5) * 10;
-     const rotateX = (mouseY - 0.5) * -10;
+     const rotateY = (mouseX - 0.1) * 10;
+     const rotateX = (mouseY - 0.1) * -10;
      
      // Apply rotation to container
      const container = document.querySelector('.container');
@@ -413,6 +408,9 @@ function createParticles() {
     }, 500);
   });
 
+  //page 4
+
+  // Sample project data (in a real app, you'd fetch this from GitHub)
   const projects = [
     {
       title: "Expense Splitter",
@@ -547,3 +545,262 @@ function createParticles() {
 
   // Initialize the grid
   window.addEventListener('load', createProjectGrid);
+
+
+//   page 5
+// Initialize GSAP
+gsap.registerPlugin(ScrollTrigger);
+        
+// Initialize Parallax.js for 3D scene
+function initParallax() {
+    const scene = document.getElementById('scene');
+    const parallaxInstance = new Parallax(scene, {
+        relativeInput: true,
+        hoverOnly: false,
+        clipRelativeInput: true,
+        invertX: false,
+        invertY: false,
+        limitX: 100,
+        limitY: 50,
+        scalarX: 10,
+        scalarY: 10,
+    });
+}
+
+// GSAP animation for the heading
+function animateHeading() {
+    const headingLines = document.querySelectorAll('.heading-line');
+    
+    // Staggered animation for each line of text
+    gsap.to(headingLines, {
+        y: 0,
+        opacity: 1,
+        duration: 1.2,
+        stagger: 0.2,
+        ease: "power3.out",
+        onComplete: () => {
+            // 3D float animation
+            gsap.to('.footer-heading', {
+                rotationY: 10,
+                rotationX: -10,
+                duration: 6,
+                yoyo: true,
+                repeat: -1,
+                ease: "sine.inOut",
+            });
+        }
+    });
+    
+    // Reveal animation for links
+    gsap.to('.link-item', {
+        opacity: 1,
+        y: 0,
+        stagger: 0.15,
+        duration: 0.8,
+        delay: 0.8,
+        ease: "power2.out",
+        onComplete: () => {
+            // Add depth effect to each link item
+            document.querySelectorAll('.link-item').forEach(item => {
+                const depth = parseFloat(item.getAttribute('data-depth') || 0.2);
+                gsap.to(item, {
+                    z: depth * 100,
+                    duration: 0.5,
+                });
+            });
+        }
+    });
+    
+    // Fade in copyright
+    gsap.to('.copyright', {
+        opacity: 0.6,
+        duration: 1,
+        delay: 1.8
+    });
+}
+
+// Create 3D particles
+function createParticles() {
+    const layers = document.querySelectorAll('.parallax-layer');
+    
+    layers.forEach((layer, layerIndex) => {
+        const particleCount = 10 - layerIndex * 2; // More particles in back layers
+        
+        for (let i = 0; i < particleCount; i++) {
+            const particle = document.createElement('div');
+            particle.classList.add('particle');
+            
+            // Random styles
+            const size = Math.random() * 8 + 2;
+            const opacity = (Math.random() * 0.15 + 0.05) / (layerIndex + 1); // More opacity in front layers
+            
+            particle.style.width = `${size}px`;
+            particle.style.height = `${size}px`;
+            particle.style.backgroundColor = `rgba(255, 255, 255, ${opacity})`;
+            
+            // Random position
+            const left = Math.random() * 100;
+            const top = Math.random() * 100;
+            particle.style.left = `${left}%`;
+            particle.style.top = `${top}%`;
+            
+            layer.appendChild(particle);
+            
+            // Add GSAP floating animation
+            gsap.to(particle, {
+                y: '+=20',
+                x: '+=10',
+                duration: 2 + Math.random() * 4,
+                repeat: -1,
+                yoyo: true,
+                ease: "sine.inOut",
+                delay: Math.random() * 2
+            });
+        }
+    });
+}
+
+// Modified customParallax function that preserves link clickability
+function customParallax() {
+    const container = document.querySelector('.parallax-wrapper');
+    const heading = document.querySelector('.footer-heading');
+    const links = document.querySelectorAll('.link-value a');
+    
+    // Make sure links are always clickable
+    links.forEach(link => {
+        link.style.pointerEvents = 'auto';
+    });
+    
+    container.addEventListener('mousemove', (e) => {
+        const centerX = container.offsetWidth / 2;
+        const centerY = container.offsetHeight / 2;
+        const mouseX = e.clientX;
+        const mouseY = e.clientY;
+        
+        // Calculate distance from center as percentage
+        const moveX = (mouseX - centerX) / centerX;
+        const moveY = (mouseY - centerY) / centerY;
+        
+        // Animate heading with more pronounced effect
+        gsap.to(heading, {
+            rotationY: moveX * 15,
+            rotationX: -moveY * 15,
+            duration: 0.5,
+            ease: "power1.out"
+        });
+        
+        // Animate link items but not the <a> tags themselves
+        document.querySelectorAll('.link-item').forEach(item => {
+            const depth = parseFloat(item.getAttribute('data-depth') || 0.2);
+            // Find the link inside this item
+            const link = item.querySelector('a');
+            
+            // Apply transform to the item
+            gsap.to(item, {
+                x: moveX * 30 * depth,
+                y: moveY * 30 * depth,
+                rotationY: moveX * 5 * depth,
+                rotationX: -moveY * 5 * depth,
+                duration: 0.5,
+                ease: "power1.out"
+            });
+        });
+    });
+}
+
+// Modified magnetic effect that preserves link clickability
+function magneticEffect() {
+    const linkValues = document.querySelectorAll('.link-value');
+    
+    linkValues.forEach(link => {
+        // Store the <a> tag reference
+        const anchor = link.querySelector('a');
+        
+        link.addEventListener('mousemove', function(e) {
+            const bounds = this.getBoundingClientRect();
+            const relX = e.clientX - bounds.left;
+            const relY = e.clientY - bounds.top;
+            const x = relX - bounds.width / 2;
+            const y = relY - bounds.height / 2;
+            
+            gsap.to(this, {
+                x: x * 0.5,
+                y: y * 0.5,
+                z: 30,
+                rotation: x * 0.02,
+                duration: 0.3,
+                ease: "power2.out"
+            });
+            
+            // Make sure anchor is clickable
+            if (anchor) {
+                anchor.style.pointerEvents = 'auto';
+            }
+        });
+        
+        link.addEventListener('mouseleave', function() {
+            gsap.to(this, {
+                x: 0,
+                y: 0,
+                z: 0,
+                rotation: 0,
+                duration: 0.5,
+                ease: "elastic.out(1, 0.3)"
+            });
+        });
+    });
+}
+
+// Modified 3D tilt effect on scroll
+function initScrollTilt() {
+    ScrollTrigger.create({
+        trigger: '.footer-container',
+        start: 'top bottom',
+        end: 'bottom top',
+        scrub: true,
+        onUpdate: (self) => {
+            const progress = self.progress;
+            const tiltAmount = 15 * (progress - 0.5);
+            
+            gsap.set('.footer-container', {
+                rotationX: tiltAmount,
+                z: progress * 100
+            });
+            
+            // Ensure links remain clickable during scroll
+            document.querySelectorAll('.link-value a').forEach(link => {
+                link.style.pointerEvents = 'auto';
+            });
+        }
+    });
+}
+
+// Animation on page load
+document.addEventListener('DOMContentLoaded', () => {
+    // Ensure all links have proper pointer-events
+    document.querySelectorAll('a').forEach(link => {
+        link.style.pointerEvents = 'auto';
+    });
+    
+    // Set transform-style on all elements for the 3D effect
+    document.querySelectorAll('*').forEach(el => {
+        if (el.className.includes('layer') || el.className.includes('footer')) {
+            el.style.transformStyle = 'preserve-3d';
+        }
+        // Except links - they should be flat
+        if (el.tagName === 'A') {
+            el.style.transformStyle = 'flat';
+        }
+    });
+    
+    createParticles();
+    animateHeading();
+    customParallax();
+    magneticEffect();
+    initScrollTilt();
+    
+    // Only initialize parallax.js if available
+    if (typeof Parallax !== 'undefined') {
+        initParallax();
+    }
+});
