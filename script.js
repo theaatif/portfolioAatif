@@ -444,38 +444,38 @@ function createParticles() {
       github: "https://github.com/theaatif/NotesTakingWebApp",
       demo: "https://notes-taking-appp.netlify.app/"
     },
-    {
-      title: "AR Interior Designer",
-      description: "Augmented reality app for visualizing furniture and decor in your space before purchasing.",
-      image: "/api/placeholder/400/320",
-      tags: ["AR.js", "Three.js", "WebXR"],
-      github: "https://github.com/username/ar-interior",
-      demo: "https://example.com/demo"
-    },
-    {
-      title: "Collaborative Whiteboard",
-      description: "Real-time collaborative drawing and diagramming tool with video chat integration.",
-      image: "/api/placeholder/400/320",
-      tags: ["Socket.io", "Canvas API", "WebRTC"],
-      github: "https://github.com/username/collab-whiteboard",
-      demo: "https://example.com/demo"
-    },
-    {
-      title: "Music Visualizer",
-      description: "Audio-reactive music visualizer using WebAudio API and generative art algorithms.",
-      image: "/api/placeholder/400/320",
-      tags: ["Web Audio API", "Canvas", "p5.js"],
-      github: "https://github.com/username/music-vis",
-      demo: "https://example.com/demo"
-    },
-    {
-      title: "Smart Home Dashboard",
-      description: "Unified dashboard for controlling and monitoring various smart home devices and sensors.",
-      image: "/api/placeholder/400/320",
-      tags: ["IoT", "MQTT", "Vue.js", "Express"],
-      github: "https://github.com/username/smart-home",
-      demo: "https://example.com/demo"
-    }
+    // {
+    //   title: "AR Interior Designer",
+    //   description: "Augmented reality app for visualizing furniture and decor in your space before purchasing.",
+    //   image: "/api/placeholder/400/320",
+    //   tags: ["AR.js", "Three.js", "WebXR"],
+    //   github: "https://github.com/username/ar-interior",
+    //   demo: "https://example.com/demo"
+    // },
+    // {
+    //   title: "Collaborative Whiteboard",
+    //   description: "Real-time collaborative drawing and diagramming tool with video chat integration.",
+    //   image: "/api/placeholder/400/320",
+    //   tags: ["Socket.io", "Canvas API", "WebRTC"],
+    //   github: "https://github.com/username/collab-whiteboard",
+    //   demo: "https://example.com/demo"
+    // },
+    // {
+    //   title: "Music Visualizer",
+    //   description: "Audio-reactive music visualizer using WebAudio API and generative art algorithms.",
+    //   image: "/api/placeholder/400/320",
+    //   tags: ["Web Audio API", "Canvas", "p5.js"],
+    //   github: "https://github.com/username/music-vis",
+    //   demo: "https://example.com/demo"
+    // },
+    // {
+    //   title: "Smart Home Dashboard",
+    //   description: "Unified dashboard for controlling and monitoring various smart home devices and sensors.",
+    //   image: "/api/placeholder/400/320",
+    //   tags: ["IoT", "MQTT", "Vue.js", "Express"],
+    //   github: "https://github.com/username/smart-home",
+    //   demo: "https://example.com/demo"
+    // }
   ];
 
   // Function to create project cards with tilt effect
